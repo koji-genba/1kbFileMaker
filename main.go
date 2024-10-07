@@ -1,28 +1,28 @@
 package main
 
 import (
-    "fmt"
-    "os"
-    "strconv"
-    "sync"
-	"time"
 	"flag"
+	"fmt"
+	"os"
+	"strconv"
+	"sync"
+	"time"
 )
 
 func createFiles(threadNum int, wg *sync.WaitGroup, fileNum int) {
-    defer wg.Done()
+	defer wg.Done()
 	fmt.Println("thread" + strconv.Itoa(threadNum))
-    for i := 0; i < fileNum; i++ {
-        fileName := "thread_" + strconv.Itoa(threadNum) + "_file_" + strconv.Itoa(i) + ".txt"
-        file, err := os.Create(fileName)
-        if err != nil {
-            fmt.Println("Error creating file:", err)
-            return
-        }
-        data := make([]byte, 1024)
-        file.Write(data)
-        file.Close()
-    }
+	for i := 0; i < fileNum; i++ {
+		fileName := "thread_" + strconv.Itoa(threadNum) + "_file_" + strconv.Itoa(i) + ".txt"
+		file, err := os.Create(fileName)
+		if err != nil {
+			fmt.Println("Error creating file:", err)
+			return
+		}
+		data := make([]byte, 1024)
+		file.Write(data)
+		file.Close()
+	}
 }
 
 func main() {
@@ -36,13 +36,13 @@ func main() {
 	fmt.Println("param f : ", *f)
 	fmt.Println("param t : ", *t)
 
-    var wg sync.WaitGroup
-    for i := 0; i < *t; i++ {
-        wg.Add(1)
-        go createFiles(i, &wg, *f)
-    }
-    wg.Wait()
+	var wg sync.WaitGroup
+	for i := 0; i < *t; i++ {
+		wg.Add(1)
+		go createFiles(i, &wg, *f)
+	}
+	wg.Wait()
 
 	fmt.Printf("process time: %s\n", time.Since(start))
-    fmt.Println("All files created.")
+	fmt.Println("All files created.")
 }
